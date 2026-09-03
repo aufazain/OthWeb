@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Proyek Gedung B RSUD Kabupaten Kediri</title>
+  <style>
+   body{
+      margin:0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color:#ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header{
+      background: linear-gradient(90deg,#1e3a8a,#0f172a);
+      color:#fff;
+      padding:20px 30px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      box-shadow:0 2px 5px rgba(0,0,0,0.2);
+    }
+    .profile{display:flex;align-items:center;gap:10px;}
+    .profile img{width:40px;height:40px;border-radius:50%;}
+    .category{
+      text-align:center;
+      background-color:#ffffff;
+      padding:20px 0;
+      color:#1e3a8a;
+    }
+    .buttons{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+      gap:20px;
+      padding: 20px 20px 80px 20px;
+      justify-items:center;
+      background-color:#ffffff;
+    }
+    .btn{
+      background: linear-gradient(145deg,#2563eb,#1e3a8a);
+      color:#ffffff;
+      border-radius:10px;
+      width:120px;
+      height:60px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      text-align:center;
+      transition:all .2s ease;
+      text-decoration:none;
+      font-size:18px;
+      font-weight:600;
+      box-shadow:0 3px 6px rgba(0,0,0,0.2);
+    }
+    .btn:hover{
+      transform:scale(1.05);
+      background:linear-gradient(145deg,#3b82f6,#1e40af);
+    }
+    .btn:active{
+      transform:scale(0.96);
+      background:linear-gradient(145deg,#1e3a8a,#0f172a);
+    }
+    .content{
+      text-align:center;
+      padding:30px;
+      background:linear-gradient(180deg,#2563eb,#0f172a);
+      color:#fff;
+      flex-grow: 1;
+    }
+    #main-footer {
+      background-color: #0f172a;
+      color: #ffffff;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 0.9em;
+    }
+    #wrapper {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="profile">
+      <img src="images/profile.jpg" alt="User">
+      <div>
+        <strong>PROYEK PEMBANGUNAN JEMBATAN BENDERA BIRU KOTA MALANG</strong><br>
+        <small>USER: PT. KECUP BETON</small>
+      </div>
+    </div>
+  </header>
+
+  <div class="category"><h2>Category</h2></div>
+
+  <!-- HANYA BAGIAN INI YANG DIUBAH -->
+  <div class="buttons">
+    <a class="btn" href="dashboard.html">Mulai</a>
+  </div>
+
+  <div id="wrapper">
+    <div id="content" class="content">
+      <p>Pilih salah satu kategori di atas untuk melihat konten.</p>
+    </div>
+  </div>
+
+  <footer id="main-footer">
+    <p>&copy; 2025 PROYEK PEMBANGUNAN JEMBATAN BENDERA BIRU KOTA MALANG</p>
+    <p>Dikelola oleh Tim Kecup Beton UGM | Versi 1.0</p>
+  </footer>
+
+</body>
+</html>

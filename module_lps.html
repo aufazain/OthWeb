@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIPROYEK - Last Planner System (LPS) Core</title>
+    <!-- FontAwesome untuk Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-dark: #0B2545;
+            --primary-blue: #134074;
+            --secondary-blue: #8DA9C4;
+            --light-bg: #EEF4F8;
+            --white: #FFFFFF;
+            --success: #2ec4b6;
+            --warning: #ffb703;
+            --danger: #e63946;
+            --text-dark: #1d3557;
+            --gray-sub: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        aside {
+            width: 260px;
+            background-color: var(--primary-dark);
+            color: var(--white);
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo-area {
+            padding: 10px 0 30px 0;
+            border-bottom: 1px solid var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        .logo-area h2 {
+            font-size: 22px;
+            letter-spacing: 1px;
+        }
+
+        .logo-area span {
+            font-size: 11px;
+            color: var(--secondary-blue);
+            display: block;
+        }
+
+        .menu-list {
+            list-style: none;
+        }
+
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: var(--secondary-blue);
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .menu-item.active a, .menu-item a:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        /* Main Workspace Content */
+        main {
+            margin-left: 260px;
+            flex-grow: 1;
+            padding: 30px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            color: var(--primary-dark);
+        }
+
+        .header-title p {
+            color: var(--gray-sub);
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        /* Tabs System styling */
+        .lps-tabs-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 1px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gray-sub);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-blue);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-dark);
+            border-bottom-color: var(--primary-blue);
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Dashboard and Module Cards */
+        .section-box {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .section-box h3 {
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            font-size: 18px;
+            border-bottom: 2px solid var(--light-bg);
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Badge and Status Indicators */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+        }
+        .badge.red { background-color: var(--danger); }
+        .badge.yellow { background-color: var(--warning); color: #000; }
+        .badge.green { background-color: var(--success); }
+
+        /* Looking-Ahead & Constraints Grid */
+        .constraint-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: #f8fafc;
+            border-left: 4px solid var(--primary-blue);
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .summary-card.danger { border-left-color: var(--danger); }
+        .summary-card.warning { border-left-color: var(--warning); }
+        .summary-card.success { border-left-color: var(--success); }
+
+        .summary-card .label { font-size: 12px; color: var(--gray-sub); font-weight: 600; }
+        .summary-card .val { font-size: 24px; font-weight: 700; margin-top: 5px; color: var(--primary-dark); }
+
+        /* Tables layout design */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: var(--light-bg);
+            color: var(--primary-dark);
+            padding: 14px;
+            font-weight: 600;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        table td {
+            padding: 14px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        table tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Form Design for interactive inputs */
+        .inline-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) 120px;
+            gap: 12px;
+            background-color: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .form-group input, .form-group select {
+            padding: 8px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-size: 14px;
+            outline-color: var(--primary-blue);
+        }
+
+        .btn-submit {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            align-self: flex-end;
+            transition: all 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* WWP & PPC Specific Grid layout */
+        .ppc-split-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 25px;
+        }
+
+        .ppc-circle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            background: #f8fafc;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .circle-progress {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(var(--success) 0% 75%, #e2e8f0 75% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .circle-progress::before {
+            content: "";
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--white);
+        }
+
+        .circle-text {
+            position: relative;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        /* Root Cause dynamic bar design */
+        .cause-bar-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .cause-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .cause-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .bar-outer {
+            width: 100%;
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .bar-inner {
+            height: 100%;
+            background-color: var(--primary-blue);
+            border-radius: 5px;
+            transition: width 0.4s ease;
+        }
+
+        .cause-item:nth-child(1) .bar-inner { background-color: var(--danger); }
+        .cause-item:nth-child(2) .bar-inner { background-color: var(--warning); }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .ppc-split-layout { grid-template-columns: 1fr; }
+            .constraint-summary-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            aside { width: 70px; padding: 10px; }
+            aside .logo-area h2, aside span, .menu-item span { display: none; }
+            main { margin-left: 70px; padding: 15px; }
+            .inline-form { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar (Struktur Sama Persis dengan Dashboard Utama) -->
+    <aside>
+        <div class="logo-area">
+            <h2>SIPROYEK</h2>
+            <span>Bridge Eng. Control v1.0</span>
+        </div>
+        <ul class="menu-list">
+            <!-- Ganti href ke file dashboard asli Anda -->
+            <li class="menu-item"><a href="dashboard.html"><i class="fa-solid fa-chart-line"></i> <span>Dashboard Utama</span></a></li>
+            <li class="menu-item active"><a href="module_lps.html"><i class="fa-solid fa-calendar-days"></i> <span>Last Planner System</span></a></li>
+            <li class="menu-item"><a href="module_evm.html"><i class="fa-solid fa-chart-column"></i> <span>EVM Modul</span></a></li>
+            <li class="menu-item"><a href="index.html"><i class="fa-solid fa-triangle-exclamation"></i> <span>MAIN MENU</span></a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Workspace Content -->
+    <main>
+        <header>
+            <div class="header-title">
+                <h1>Modul Last Planner System (LPS)</h1>
+                <p>Mesin Pengendali Proyek Utama (Siproyek Core) - Span 2 Bridge Construction</p>
+            </div>
+            <div>
+                <span class="badge green">LPS ACTIVE</span>
+            </div>
+        </header>
+
+        <!-- LPS Tabs Menu -->
+        <div class="lps-tabs-nav">
+            <button class="tab-btn active" onclick="switchTab(event, 'lookahead')">1. Look-Ahead Planning (3-6 Minggu)</button>
+            <button class="tab-btn" onclick="switchTab(event, 'wwp')">2. Weekly Work Plan & PPC Tracker</button>
+        </div>
+
+        <!-- ================= TAB 1: LOOK-AHEAD & CONSTRAINTS ================= -->
+        <div id="lookahead" class="tab-pane active">
+            
+            <!-- Constraint Statistics Cards -->
+            <div class="constraint-summary-grid">
+                <div class="summary-card">
+                    <div class="label">Total Constraints Teridentifikasi</div>
+                    <div class="val" id="count-total">7</div>
+                </div>
+                <div class="summary-card danger">
+                    <div class="label">Constraint Overdue (Terlambat)</div>
+                    <div class="val" id="count-overdue">2</div>
+                </div>
+                <div class="summary-card warning">
+                    <div class="label">Active / Open Constraint</div>
+                    <div class="val" id="count-open">3</div>
+                </div>
+                <div class="summary-card success">
+                    <div class="label">Constraint Resolved (Clear)</div>
+                    <div class="val" id="count-resolved">2</div>
+                </div>
+            </div>
+
+            <!-- Constraint Management Form Input (Poin 2a & 5) -->
+            <div class="section-box">
+                <h3><i class="fa-solid fa-folder-plus"></i> Identifikasi Constraint Baru (Look-Ahead Input)</h3>
+                <form class="inline-form" id="constraint-form" onsubmit="addConstraint(event)">
+                    <div class="form-group">
+                        <label for="con-desc">Deskripsi Kendala</label>
+                        <input type="text" id="con-desc" placeholder="Contoh: Ready Mix K-350 terlambat" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="con-job">Pekerjaan Terdampak</label>
+                        <input type="text" id="con-job" placeholder="Contoh: Pengecoran Pier 2" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="con-type">Kategori Botleneck</label>
+                        <select id="con-type">
+                            <option value="Material">Material</option>
+                            <option value="Shop Drawing / Desain">Shop Drawing / Desain</option>
+                            <option value="Akses & Alat Berat">Akses & Alat Berat</option>
+                            <option value="Metode Kerja">Metode Kerja</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="con-pic">PIC / Penanggung Jawab</label>
+                        <input type="text" id="con-pic" placeholder="Contoh: Bp. Hermawan" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="con-date">Deadline Selesai</label>
+                        <input type="date" id="con-date" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Simpan</button>
+                </form>
+            </div>
+
+            <!-- Constraint List Database Table -->
+            <div class="section-box">
+                <h3><i class="fa-solid fa-list-check"></i> Constraint Log Tracker (Looking-Ahead 3-6 Minggu)</h3>
+                <table id="constraint-table">
+                    <thead>
+                        <tr>
+                            <th>Kategori</th>
+                            <th>Deskripsi Kendala / Bottleneck</th>
+                            <th>Pekerjaan Terdampak</th>
+                            <th>PIC</th>
+                            <th>Deadline Target</th>
+                            <th>Status Tracking</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-status="overdue">
+                            <td><span class="badge red">Shop Drawing</span></td>
+                            <td>Metode Erection Span 2 belum disetujui konsultan pengawas</td>
+                            <td>Erection Girder Span 2 (Pier 2)</td>
+                            <td>Bp. Aufa (Eng)</td>
+                            <td>15 Mei 2026</td>
+                            <td><span class="badge red">OVERDUE</span></td>
+                            <td><button onclick="resolveConstraint(this)" class="badge green" style="border:none; cursor:pointer;">Set Clear</button></td>
+                        </tr>
+                        <tr data-status="overdue">
+                            <td><span class="badge red">Material</span></td>
+                            <td>Baut High Tensile Grade 8.8 M24 belum tiba di Gudang site</td>
+                            <td>Sambungan Pier Head Segmen Baja</td>
+                            <td>Logistik Pusat</td>
+                            <td>18 Mei 2026</td>
+                            <td><span class="badge red">OVERDUE</span></td>
+                            <td><button onclick="resolveConstraint(this)" class="badge green" style="border:none; cursor:pointer;">Set Clear</button></td>
+                        </tr>
+                        <tr data-status="open">
+                            <td><span class="badge yellow">Akses & Alat</span></td>
+                            <td>Izin Mobilisasi Multi-Axle Trailer dari Dishub Jatim</td>
+                            <td>Mobilisasi Balok Girder Beton</td>
+                            <td>Site Manager</td>
+                            <td>28 Mei 2026</td>
+                            <td><span class="badge yellow">IN PROGRESS</span></td>
+                            <td><button onclick="resolveConstraint(this)" class="badge green" style="border:none; cursor:pointer;">Set Clear</button></td>
+                        </tr>
+                        <tr data-status="open">
+                            <td><span class="badge yellow">Shop Drawing</span></td>
+                            <td>Persetujuan Trial Mix Concrete K-500 dari Vendor Baru</td>
+                            <td>Pengecoran Deck Jembatan</td>
+                            <td>Bp. Dwi (QC)</td>
+                            <td>04 Juni 2026</td>
+                            <td><span class="badge yellow">IN PROGRESS</span></td>
+                            <td><button onclick="resolveConstraint(this)" class="badge green" style="border:none; cursor:pointer;">Set Clear</button></td>
+                        </tr>
+                        <tr data-status="resolved">
+                            <td><span class="badge green">Metode Kerja</span></td>
+                            <td>Penyusunan JSA (Job Safety Analysis) Erection Balok</td>
+                            <td>K3 Konstruksi</td>
+                            <td>K3 Specialist</td>
+                            <td>12 Mei 2026</td>
+                            <td><span class="badge green">RESOLVED</span></td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ================= TAB 2: WWP & PPC TRACKER ================= -->
+        <div id="wwp" class="tab-pane">
+            <div class="ppc-split-layout">
+                
+                <!-- Left Section: Automated PPC Calculator Visualizer (Poin 2c) -->
+                <div class="section-box" style="margin-bottom:0;">
+                    <h3><i class="fa-solid fa-gauge"></i> Real-time PPC Tracker</h3>
+                    <div class="ppc-circle-container">
+                        <div class="circle-progress" id="ppc-donut">
+                            <span class="circle-text" id="ppc-percentage">75%</span>
+                        </div>
+                        <p style="font-weight: 600; margin-bottom: 10px;">Percent Plan Complete (PPC) Minggu Ini</p>
+                        <p style="font-size: 13px; color: var(--gray-sub);">
+                            Centang checklist target WWP di samping kanan untuk mensimulasikan pencapaian riil lapangan. Sistem akan mengkalkulasi otomatis.
+                        </p>
+                    </div>
+
+                    <!-- Root Cause Failure Analysis Chart (Poin 2c Root Cause) -->
+                    <h3 style="margin-top: 25px;"><i class="fa-solid fa-chart-bar"></i> Root Cause Penyebab Gagal</h3>
+                    <div class="cause-bar-list">
+                        <div class="cause-item">
+                            <div class="cause-header">
+                                <span>Material Belum Datang</span>
+                                <span id="val-rc-material">50%</span>
+                            </div>
+                            <div class="bar-outer">
+                                <div class="bar-inner" id="bar-rc-material" style="width: 50%;"></div>
+                            </div>
+                        </div>
+                        <div class="cause-item">
+                            <div class="cause-header">
+                                <span>Alat Berat Rusak / Standby</span>
+                                <span id="val-rc-alat">30%</span>
+                            </div>
+                            <div class="bar-outer">
+                                <div class="bar-inner" id="bar-rc-alat" style="width: 30%;"></div>
+                            </div>
+                        </div>
+                        <div class="cause-item">
+                            <div class="cause-header">
+                                <span>Cuaca Buruk (Hujan Deras)</span>
+                                <span id="val-rc-cuaca">15%</span>
+                            </div>
+                            <div class="bar-outer">
+                                <div class="bar-inner" id="bar-rc-cuaca" style="width: 15%;"></div>
+                            </div>
+                        </div>
+                        <div class="cause-item">
+                            <div class="cause-header">
+                                <span>Tenaga Kerja Absen / Kurang</span>
+                                <span id="val-rc-manpower">5%</span>
+                            </div>
+                            <div class="bar-outer">
+                                <div class="bar-inner" id="bar-rc-manpower" style="width: 5%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Section: Weekly Work Plan Sheet (Poin 2b & 2c) -->
+                <div class="section-box" style="margin-bottom:0;">
+                    <h3><i class="fa-solid fa-table-list"></i> Lembar Weekly Work Plan (WWP) - Minggu 14 (Mei 2026)</h3>
+                    <table id="wwp-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">Selesai</th>
+                                <th>Pekerjaan & Lokasi (Span/Abutment)</th>
+                                <th>Volume Target</th>
+                                <th>Pelaksana (PIC)</th>
+                                <th>Penyebab Gagal (Jika Tidak Selesai)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Item 1 -->
+                            <tr data-wwp-id="1">
+                                <td style="text-align:center;">
+                                    <input type="checkbox" checked onchange="recalculatePPC()" style="transform: scale(1.3); cursor: pointer;">
+                                </td>
+                                <td><strong>Pengecoran Abutment 1 (Pier Utama)</strong><br><small>Lokasi: Pier Kepala - Span 1</small></td>
+                                <td>120 m³</td>
+                                <td>Bp. Joko Santoso</td>
+                                <td>
+                                    <select disabled onchange="updateRootCauses()" style="width:100%; padding: 4px; font-size:12px;">
+                                        <option value="None">Selesai 100%</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <!-- Item 2 -->
+                            <tr data-wwp-id="2">
+                                <td style="text-align:center;">
+                                    <input type="checkbox" checked onchange="recalculatePPC()" style="transform: scale(1.3); cursor: pointer;">
+                                </td>
+                                <td><strong>Erection Balok Ginder Segmen 1-3</strong><br><small>Lokasi: Span 2 (Tengah Sungai)</small></td>
+                                <td>3 Balok</td>
+                                <td>Bp. Danang</td>
+                                <td>
+                                    <select disabled onchange="updateRootCauses()" style="width:100%; padding: 4px; font-size:12px;">
+                                        <option value="None">Selesai 100%</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <!-- Item 3 -->
+                            <tr data-wwp-id="3">
+                                <td style="text-align:center;">
+                                    <input type="checkbox" checked onchange="recalculatePPC()" style="transform: scale(1.3); cursor: pointer;">
+                                </td>
+                                <td><strong>Pemasangan Elastomeric Bearing Pad</strong><br><small>Lokasi: Pier Head 2</small></td>
+                                <td>8 Unit</td>
+                                <td>Bp. Ridwan</td>
+                                <td>
+                                    <select disabled onchange="updateRootCauses()" style="width:100%; padding: 4px; font-size:12px;">
+                                        <option value="None">Selesai 100%</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <!-- Item 4 (Unchecked by default) -->
+                            <tr data-wwp-id="4">
+                                <td style="text-align:center;">
+                                    <input type="checkbox" onchange="recalculatePPC()" style="transform: scale(1.3); cursor: pointer;">
+                                </td>
+                                <td><strong>Pemasangan Bekisting Plat Deck Jembatan</strong><br><small>Lokasi: Span 2, Panel 5-10</small></td>
+                                <td>150 m²</td>
+                                <td>Bp. Sodik</td>
+                                <td>
+                                    <select onchange="updateRootCauses()" style="width:100%; padding: 6px; font-size:12px;">
+                                        <option value="Material">Gagal: Material Belum Datang</option>
+                                        <option value="Alat">Gagal: Alat Berat Standby</option>
+                                        <option value="Cuaca">Gagal: Faktor Cuaca Buruk</option>
+                                        <option value="Tenaga">Gagal: Kekurangan Tenaga Kerja</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- JavaScript logic interaktif untuk mensimulasikan fungsionalitas matang Last Planner System -->
+    <script>
+        // Tab switching logic
+        function switchTab(evt, tabId) {
+            let tabPanes = document.querySelectorAll(".tab-pane");
+            tabPanes.forEach(pane => pane.classList.remove("active"));
+
+            let tabBtns = document.querySelectorAll(".tab-btn");
+            tabBtns.forEach(btn => btn.classList.remove("active"));
+
+            document.getElementById(tabId).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Add Constraint dynamically (Poin 2a)
+        function addConstraint(e) {
+            e.preventDefault();
+            
+            const desc = document.getElementById("con-desc").value;
+            const job = document.getElementById("con-job").value;
+            const type = document.getElementById("con-type").value;
+            const pic = document.getElementById("con-pic").value;
+            const targetDate = document.getElementById("con-date").value;
+
+            const table = document.getElementById("constraint-table").getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow(0); // Insert at the top of table body
+            newRow.setAttribute("data-status", "open");
+
+            // Format date for better view
+            const formattedDate = new Date(targetDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+
+            newRow.innerHTML = `
+                <td><span class="badge yellow">${type}</span></td>
+                <td>${desc}</td>
+                <td>${job}</td>
+                <td>${pic}</td>
+                <td>${formattedDate}</td>
+                <td><span class="badge yellow">IN PROGRESS</span></td>
+                <td><button onclick="resolveConstraint(this)" class="badge green" style="border:none; cursor:pointer;">Set Clear</button></td>
+            `;
+
+            // Reset Form inputs
+            document.getElementById("constraint-form").reset();
+
+            // Refresh Count Summary Statistics
+            updateConstraintStats();
+        }
+
+        // Set status constraint resolved (Poin 5)
+        function resolveConstraint(btn) {
+            const row = btn.closest("tr");
+            row.setAttribute("data-status", "resolved");
+            
+            // Ubah badge status
+            const statusCell = row.cells[5];
+            statusCell.innerHTML = `<span class="badge green">RESOLVED</span>`;
+            
+            // Sembunyikan tombol action
+            row.cells[6].innerText = "-";
+
+            updateConstraintStats();
+        }
+
+        // Update Statistics Counter Boxes
+        function updateConstraintStats() {
+            const rows = document.querySelectorAll("#constraint-table tbody tr");
+            let total = rows.length;
+            let open = 0;
+            let overdue = 0;
+            let resolved = 0;
+
+            rows.forEach(row => {
+                const status = row.getAttribute("data-status");
+                if (status === "open") open++;
+                else if (status === "overdue") overdue++;
+                else if (status === "resolved") resolved++;
+            });
+
+            document.getElementById("count-total").innerText = total;
+            document.getElementById("count-open").innerText = open;
+            document.getElementById("count-overdue").innerText = overdue;
+            document.getElementById("count-resolved").innerText = resolved;
+        }
+
+        // Real-time dynamic calculation for Percent Plan Complete (PPC) (Poin 2c)
+        function recalculatePPC() {
+            const tableRows = document.querySelectorAll("#wwp-table tbody tr");
+            let totalTasks = tableRows.length;
+            let completedTasks = 0;
+
+            tableRows.forEach(row => {
+                const checkbox = row.querySelector("input[type='checkbox']");
+                const selectElement = row.querySelector("select");
+
+                if (checkbox.checked) {
+                    completedTasks++;
+                    // Lock and deactivate select box if task is checked (Selesai 100%)
+                    selectElement.disabled = true;
+                    selectElement.innerHTML = `<option value="None">Selesai 100%</option>`;
+                } else {
+                    // Activate select box of failure reasons
+                    selectElement.disabled = false;
+                    selectElement.innerHTML = `
+                        <option value="Material">Gagal: Material Belum Datang</option>
+                        <option value="Alat">Gagal: Alat Berat Standby</option>
+                        <option value="Cuaca">Gagal: Faktor Cuaca Buruk</option>
+                        <option value="Tenaga">Gagal: Kekurangan Tenaga Kerja</option>
+                    `;
+                }
+            });
+
+            // Calculate percentage
+            const ppcPercentage = Math.round((completedTasks / totalTasks) * 100);
+
+            // Update UI Ring
+            document.getElementById("ppc-percentage").innerText = ppcPercentage + "%";
+            
+            // Update donut background conic-gradient dynamic styling
+            const donut = document.getElementById("ppc-donut");
+            donut.style.background = `conic-gradient(var(--success) 0% ${ppcPercentage}%, #e2e8f0 ${ppcPercentage}% 100%)`;
+
+            // Auto refresh Root Causes calculations based on active reasons
+            updateRootCauses();
+        }
+
+        // Root Cause Analytics update engine (Poin 2c Root Cause Analysis)
+        function updateRootCauses() {
+            const rows = document.querySelectorAll("#wwp-table tbody tr");
+            let uncompletedCount = 0;
+
+            let counts = {
+                Material: 0,
+                Alat: 0,
+                Cuaca: 0,
+                Tenaga: 0
+            };
+
+            rows.forEach(row => {
+                const checkbox = row.querySelector("input[type='checkbox']");
+                if (!checkbox.checked) {
+                    uncompletedCount++;
+                    const select = row.querySelector("select");
+                    const val = select.value;
+                    if(counts[val] !== undefined) {
+                        counts[val]++;
+                    }
+                }
+            });
+
+            if (uncompletedCount === 0) {
+                // If 100% PPC, reset root cause bars to zero smoothly
+                document.getElementById("val-rc-material").innerText = "0%";
+                document.getElementById("bar-rc-material").style.width = "0%";
+                document.getElementById("val-rc-alat").innerText = "0%";
+                document.getElementById("bar-rc-alat").style.width = "0%";
+                document.getElementById("val-rc-cuaca").innerText = "0%";
+                document.getElementById("bar-rc-cuaca").style.width = "0%";
+                document.getElementById("val-rc-manpower").innerText = "0%";
+                document.getElementById("bar-rc-manpower").style.width = "0%";
+                return;
+            }
+
+            // Calculate and render each bar share from total failed works
+            const matPct = Math.round((counts.Material / uncompletedCount) * 100);
+            const alatPct = Math.round((counts.Alat / uncompletedCount) * 100);
+            const weatherPct = Math.round((counts.Cuaca / uncompletedCount) * 100);
+            const manPct = Math.round((counts.Tenaga / uncompletedCount) * 100);
+
+            document.getElementById("val-rc-material").innerText = matPct + "%";
+            document.getElementById("bar-rc-material").style.width = matPct + "%";
+
+            document.getElementById("val-rc-alat").innerText = alatPct + "%";
+            document.getElementById("bar-rc-alat").style.width = alatPct + "%";
+
+            document.getElementById("val-rc-cuaca").innerText = weatherPct + "%";
+            document.getElementById("bar-rc-cuaca").style.width = weatherPct + "%";
+
+            document.getElementById("val-rc-manpower").innerText = manPct + "%";
+            document.getElementById("bar-rc-manpower").style.width = manPct + "%";
+        }
+
+        // Initialize state calculations on load
+        window.onload = function() {
+            updateConstraintStats();
+            recalculatePPC();
+        };
+    </script>
+</body>
+</html>
+`

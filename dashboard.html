@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BridgePro - LPS & EVM Integrated System</title>
+    <style>
+        :root {
+            --primary-dark: #0B2545;
+            --primary-blue: #134074;
+            --secondary-blue: #8DA9C4;
+            --light-bg: #EEF4F8;
+            --white: #FFFFFF;
+            --success: #2ec4b6;
+            --warning: #ffb703;
+            --danger: #e63946;
+            --text-dark: #1d3557;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        aside {
+            width: 260px;
+            background-color: var(--primary-dark);
+            color: var(--white);
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .logo-area {
+            padding: 10px 0 30px 0;
+            border-bottom: 1px solid var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        .logo-area h2 {
+            font-size: 22px;
+            letter-spacing: 1px;
+        }
+
+        .logo-area span {
+            font-size: 11px;
+            color: var(--secondary-blue);
+            display: block;
+        }
+
+        .menu-list {
+            list-style: none;
+        }
+
+        .menu-item a {
+            display: block;
+            padding: 12px 15px;
+            color: var(--secondary-blue);
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .menu-item.active a, .menu-item a:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        /* Main Content Workspace */
+        main {
+            margin-left: 260px;
+            flex-grow: 1;
+            padding: 30px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .project-title h1 {
+            font-size: 24px;
+            color: var(--primary-dark);
+        }
+
+        /* Insight Box (Poin 1 & 4) */
+        .insight-banner {
+            background: linear-gradient(135deg, #fff 0%, #edf2f7 100%);
+            border-left: 5px solid var(--danger);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .insight-banner h4 {
+            color: var(--danger);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .insight-banner ul {
+            margin-left: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Grid Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card-metric {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-metric .title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .card-metric .value {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 10px 0 5px 0;
+            color: var(--primary-dark);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .badge.red { background-color: var(--danger); }
+        .badge.yellow { background-color: var(--warning); color: #000; }
+        .badge.green { background-color: var(--success); }
+
+        /* Content Blocks */
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .section-box {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .section-box h3 {
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--light-bg);
+            padding-bottom: 10px;
+        }
+
+        /* Simulated S-Curve Canvas placeholder */
+        .scurve-placeholder {
+            width: 100%;
+            height: 250px;
+            background: #f8fafc;
+            border: 1px dashed var(--secondary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            border-radius: 6px;
+        }
+
+        /* Tables for Modules */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: var(--light-bg);
+            color: var(--primary-dark);
+            padding: 12px;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--light-bg);
+        }
+
+        /* Mobile Friendly Input (Poin 6) */
+        @media (max-width: 768px) {
+            aside { width: 70px; padding: 10px; }
+            aside .logo-area h2, aside span, .menu-item span { display: none; }
+            main { margin-left: 70px; padding: 15px; }
+            .dashboard-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside>
+        <div class="logo-area">
+            <h2>SIPROYEK</h2>
+            <span>Bridge Eng. Control v1.0</span>
+        </div>
+        <ul class="menu-list">
+            <li class="menu-item active"><a href="index.html"> <span>Dashboard Utama</span></a></li>
+            <li class="menu-item"><a href="module_lps.html"> <span>Last Planner System</span></a></li>
+            <li class="menu-item"><a href="module_evm.html"> <span>EVM Modul</span></a></li>
+            <li class="menu-item"><a href="#"> <span>Constraint Log</span></a></li>
+            <li class="menu-item"><a href="#"> <span>Progress Lapangan</span></a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main>
+        <header>
+            <div class="project-title">
+                <h1>Pembangunan Jembatan Utama - Span 2</h1>
+                <p style="color: #64748b; font-size: 14px;">Lokasi: Pacitan, Jawa Timur</p>
+            </div>
+            <div>
+                <span class="badge red">LIVE UPDATE</span>
+            </div>
+        </header>
+
+        <!-- Dynamic Early Warning Insights (Poin 1 & 4) -->
+        <div class="insight-banner">
+            <h4>⚠️ INTEGRATED SYSTEM INSIGHT (AUTOMATED)</h4>
+            <ul>
+                <li><strong>Proyek Terlambat 8% (SPI = 0.92):</strong> Deviasi negatif dipicu oleh rendahnya capaian PPC (65%) pada Pekerjaan Erection Girder Span 2.</li>
+                <li><strong>Indikasi Cost Overrun (CPI = 0.88):</strong> Penggunaan alat berat crane stanby berlebih akibat kendala approval metode kerja.</li>
+                <li><strong>Rekomendasi Aksi:</strong> Lakukan program <i>crashing schedule</i> (penambahan manpower/lembur) pada area kritis Pier 2 segera setelah constraint Gambar Kerja diselesaikan.</li>
+            </ul>
+        </div>
+
+        <!-- Key Metrics Row (Poin 1, 3, & 5) -->
+        <div class="metrics-grid">
+            <div class="card-metric">
+                <div class="title">Schedule Performance (SPI)</div>
+                <div class="value">0.92</div>
+                <span class="badge red">Warning Merah (< 0.95)</span>
+            </div>
+            <div class="card-metric">
+                <div class="title">Cost Performance (CPI)</div>
+                <div class="value">0.88</div>
+                <span class="badge red">Potensi Overbudget</span>
+            </div>
+            <div class="card-metric">
+                <div class="title">Percent Plan Complete (PPC)</div>
+                <div class="value">65.4%</div>
+                <span class="badge yellow">Tren Menurun</span>
+            </div>
+            <div class="card-metric">
+                <div class="title">Active Constraints</div>
+                <div class="value">4 Open</div>
+                <span class="badge red">2 Overdue</span>
+            </div>
+        </div>
+
+        <!-- Visual & Data Table Grid -->
+        <div class="dashboard-row">
+            <!-- Left Column: S-Curve Graph Area -->
+            <div class="section-box">
+                <h3>Kurva S Proyek (PV vs EV vs AC)</h3>
+                <div class="scurve-placeholder">
+                    [Visualisasi S-Curve Canvas Line Area: PV Base vs Realisasi EV & AC]
+                </div>
+            </div>
+
+            <!-- Right Column: Root Cause Pareto (Poin 2c) -->
+            <div class="section-box">
+                <h3>Root Cause Gagal WWP</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kategori</th>
+                            <th>Frekuensi</th>
+                            <th>Rank</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Material Delay</td>
+                            <td>42%</td>
+                            <td>🥇 1</td>
+                        </tr>
+                        <tr>
+                            <td>Alat / Crane Breakdown</td>
+                            <td>28%</td>
+                            <td>🥈 2</td>
+                        </tr>
+                        <tr>
+                            <td>Cuaca Buruk</td>
+                            <td>18%</td>
+                            <td>🥉 3</td>
+                        </tr>
+                        <tr>
+                            <td>Tenaga Kerja</td>
+                            <td>12%</td>
+                            <td>4</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Look-Ahead Planning Layout & Constraint Tracking (Poin 2a & 5) -->
+        <div class="section-box" style="margin-bottom: 30px;">
+            <h3>Modul Manajemen Constraint (Look-Ahead 3-6 Minggu)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Deskripsi Kendala (Constraint)</th>
+                        <th>Pekerjaan Terdampak</th>
+                        <th>PIC</th>
+                        <th>Target Selesai</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#C-021</td>
+                        <td>Shop Drawing Erection Span 2 Belum Approve</td>
+                        <td>Erection Girder Voided Slab</td>
+                        <td>Aufa (Eng)</td>
+                        <td>25 Mei 2026</td>
+                        <td><span class="badge red">OVERDUE</span></td>
+                    </tr>
+                    <tr>
+                        <td>#C-024</td>
+                        <td>Baut High Tensile M24 Belum Tiba di Lokasi</td>
+                        <td>Sambungan Segmen Rangka Baja</td>
+                        <td>Logistik</td>
+                        <td>28 Mei 2026</td>
+                        <td><span class="badge yellow">IN PROGRESS</span></td>
+                    </tr>
+                    <tr>
+                        <td>#C-025</td>
+                        <td>Izin Mobilisasi Multi-Axle Trailer Plat K</td>
+                        <td>Mobilisasi Balok Girder</td>
+                        <td>Site Manager</td>
+                        <td>02 Juni 2026</td>
+                        <td><span class="badge green">RESOLVED</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</body>
+</html>
