@@ -641,7 +641,7 @@
                     </div>
                     <div class="form-group">
                         <label for="con-job">Pekerjaan Terdampak</label>
-                        <input type="text" id="con-job" placeholder="Contoh: Pengecoran Pier 2" required>
+                        <input type="text" id="con-job" placeholder="Contoh: Pengecoran kolom" required>
                     </div>
                     <div class="form-group">
                         <label for="con-type">Kategori Botleneck</label>
@@ -681,8 +681,8 @@
                     <tbody>
                         <tr data-status="overdue">
                             <td><span class="badge red">Shop Drawing</span></td>
-                            <td>Metode Erection Span 2 belum disetujui konsultan pengawas</td>
-                            <td>Erection Girder Span 2 (Pier 2)</td>
+                            <td>Metode Erection atap segmen 2 belum disetujui konsultan pengawas</td>
+                            <td>Erection segmen 2 (rangka ab12)</td>
                             <td>Bp. Aufa (Eng)</td>
                             <td>15 Mei 2026</td>
                             <td><span class="badge red">OVERDUE</span></td>
@@ -690,8 +690,8 @@
                         </tr>
                         <tr data-status="overdue">
                             <td><span class="badge red">Material</span></td>
-                            <td>Baut High Tensile Grade 8.8 M24 belum tiba di Gudang site</td>
-                            <td>Sambungan Pier Head Segmen Baja</td>
+                            <td>Baut High Tensile Bp5pad belum tiba di Gudang site</td>
+                            <td>Rangka atap segmen 3 af45f</td>
                             <td>Logistik Pusat</td>
                             <td>18 Mei 2026</td>
                             <td><span class="badge red">OVERDUE</span></td>
@@ -700,7 +700,7 @@
                         <tr data-status="open">
                             <td><span class="badge yellow">Akses & Alat</span></td>
                             <td>Izin Mobilisasi Multi-Axle Trailer dari Dishub Jatim</td>
-                            <td>Mobilisasi Balok Girder Beton</td>
+                            <td>Mobilisasi material rangka atap segmen 8</td>
                             <td>Site Manager</td>
                             <td>28 Mei 2026</td>
                             <td><span class="badge yellow">IN PROGRESS</span></td>
@@ -708,8 +708,8 @@
                         </tr>
                         <tr data-status="open">
                             <td><span class="badge yellow">Shop Drawing</span></td>
-                            <td>Persetujuan Trial Mix Concrete K-500 dari Vendor Baru</td>
-                            <td>Pengecoran Deck Jembatan</td>
+                            <td>Persetujuan Trial Mix Concrete K-225 dari Vendor Baru</td>
+                            <td>Pengecoran area kf4</td>
                             <td>Bp. Dwi (QC)</td>
                             <td>04 Juni 2026</td>
                             <td><span class="badge yellow">IN PROGRESS</span></td>
@@ -717,7 +717,7 @@
                         </tr>
                         <tr data-status="resolved">
                             <td><span class="badge green">Metode Kerja</span></td>
-                            <td>Penyusunan JSA (Job Safety Analysis) Erection Balok</td>
+                            <td>Penyusunan JSA (Job Safety Analysis) Erection atap</td>
                             <td>K3 Konstruksi</td>
                             <td>K3 Specialist</td>
                             <td>12 Mei 2026</td>
@@ -791,25 +791,26 @@
                         <tbody>
                             <tr data-wwp-id="1">
                                 <td style="text-align:center;"><input type="checkbox" checked onchange="recalculatePPC()" style="transform: scale(1.3); cursor: pointer;"></td>
-                                <td><strong>Pengecoran Abutment 1 (Pier Utama)</strong><br><small>Lokasi: Pier Kepala - Span 1</small></td>
+                                <td><strong>Pengecoran Abutment area kf3
+                                </strong><br><small>Lokasi: area kf3</small></td>
                                 <td>120 m³</td><td>Bp. Joko Santoso</td>
                                 <td><select disabled onchange="updateRootCauses()" style="width:100%; padding: 4px; font-size:12px;"><option value="None">Selesai 100%</option></select></td>
                             </tr>
                             <tr data-wwp-id="2">
                                 <td style="text-align:center;"><input type="checkbox" checked onchange="recalculatePPC()" style="transform: scale(1.3); cursor: pointer;"></td>
-                                <td><strong>Erection Balok Ginder Segmen 1-3</strong><br><small>Lokasi: Span 2 (Tengah Sungai)</small></td>
+                                <td><strong>Erection atap Segmen 1-3</strong><br><small>Lokasi: Span 2 kf17</small></td>
                                 <td>3 Balok</td><td>Bp. Danang</td>
                                 <td><select disabled onchange="updateRootCauses()" style="width:100%; padding: 4px; font-size:12px;"><option value="None">Selesai 100%</option></select></td>
                             </tr>
                             <tr data-wwp-id="3">
                                 <td style="text-align:center;"><input type="checkbox" checked onchange="recalculatePPC()" style="transform: scale(1.3); cursor: pointer;"></td>
-                                <td><strong>Pemasangan Elastomeric Bearing Pad</strong><br><small>Lokasi: Pier Head 2</small></td>
+                                <td><strong>Pemasangan ikatan atap</strong><br><small>Lokasi: joint atap js56</small></td>
                                 <td>8 Unit</td><td>Bp. Ridwan</td>
                                 <td><select disabled onchange="updateRootCauses()" style="width:100%; padding: 4px; font-size:12px;"><option value="None">Selesai 100%</option></select></td>
                             </tr>
                             <tr data-wwp-id="4">
                                 <td style="text-align:center;"><input type="checkbox" onchange="recalculatePPC()" style="transform: scale(1.3); cursor: pointer;"></td>
-                                <td><strong>Pemasangan Bekisting Plat Deck Jembatan</strong><br><small>Lokasi: Span 2, Panel 5-10</small></td>
+                                <td><strong>fabrikasi segmen 8</strong><br><small>Lokasi: fabri 2</small></td>
                                 <td>150 m²</td><td>Bp. Sodik</td>
                                 <td>
                                     <select onchange="updateRootCauses()" style="width:100%; padding: 6px; font-size:12px;">
